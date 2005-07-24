@@ -1,0 +1,34 @@
+# SConsctruct from pysrcexe project
+
+# ======================================================#
+# Copyright (c) Miki Tebeka <miki.tebeka@gmail.com>     #
+# This file is under the GNU Public License (GPL), see  #
+# http://www.gnu.org/copyleft/gpl.html for more details #
+# ======================================================#
+
+# To know about scons visit http://www.scons.org
+
+from sys import platform
+
+# Options
+opts = Options()
+opts.Add("debug", "generate debugging info", "")
+if platform == "win32":
+    # Use mingw on win32
+    env = Environment(tools=["mingw"], options=opts)
+else:
+    env = Environment(options=opts)
+
+env.Append(CCFLAGS = ["-Wall"])
+
+# Generate help
+Help(opts.GenerateHelpText(env))
+env.Append(options = opts)
+
+# Debugging
+if env["debug"]:
+    env.Append(CCFLAGS = ["-g"])
+else:
+    env.Append(CCFLAGS = ["-O2"])
+
+env.Program("run.c")
